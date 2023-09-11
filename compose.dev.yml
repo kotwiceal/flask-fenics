@@ -1,0 +1,32 @@
+version: '3.9'
+
+networks:
+  flask-fenics-net:
+    driver: bridge
+
+services:
+  app:
+    build: ./app
+    container_name: flask-fenics
+    stdin_open: true
+    tty: true
+    environment:
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "5000:5000"
+    networks:
+      - flask-fenics-net
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '5'
+        env: 'os'
+    x-develop:
+      watch:
+      - action: sync
+        path: ./app
+        target: /home/flask-fenics
+      - action: rebuild
+        path: ./app/pyproject.toml
+        target: /home/flask-fenics/pyproject.toml

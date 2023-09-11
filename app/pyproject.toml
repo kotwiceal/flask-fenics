@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "app"
+version = "0.1.0"
+description = "To assembly python environment dependencies of flask-fenics project."
+authors = ["kotwiceal <kotvitskyaya@gmail.com>"]
+readme = "README.md"
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.6"
+flask = "^2.0.3"
+flask-socketio = "^5.3.5"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

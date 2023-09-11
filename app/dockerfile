@@ -1,0 +1,6 @@
+FROM quay.io/fenicsproject/stable:latest
+RUN pip install poetry
+
+WORKDIR /home/flask-fenics
+COPY . .
+RUN poetry env use system && poetry config virtualenvs.create false && poetry install
