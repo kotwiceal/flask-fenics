@@ -1,5 +1,4 @@
-"""This package implements HTTP server hosted by flask framework.
-"""
+"""This package implements HTTP server hosted by flask framework."""
 
 from flask import Flask
 from flask_socketio import SocketIO
@@ -9,11 +8,13 @@ from src import solver
 app = Flask(__name__, static_url_path = '/static')
 # create socketio instance
 flaskSocket = SocketIO(app)
+# create taskmanager instance
+taskManager = solver.TaskManager(4)
 
-from src import views
+from src import views, socket
 
 def init_app():
-    pass
+    taskManager.run(flaskSocket)
 
 def start_app():
     try:
