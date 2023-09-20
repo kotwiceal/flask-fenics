@@ -1,9 +1,20 @@
+import {ConfiguratePanel} from './configurate'
+
 const TaskContainer = (prop) => {
 
     // accordion state control
     const [accordionActiveKey, setAccordionActiveKey] = useState('configurate')
     const onSelectAccordion = (eventKey, event) => {
         setAccordionActiveKey(eventKey)
+    }
+
+    // form data state control
+    const [formDisabledConfigurate, setFormDisabledConfigurate] = useState(false)
+    const [formDataConfigurate, setFormDataConfigurate] = useState({})
+    const form_configurate = {
+        setFormData: setFormDataConfigurate, 
+        formDisabled: formDisabledConfigurate, 
+        setFormDisabled: setFormDisabledConfigurate
     }
 
     return (
@@ -18,7 +29,7 @@ const TaskContainer = (prop) => {
                     <Accordion.Item eventKey = 'configurate'>
                         <Accordion.Header>Configurate</Accordion.Header>
                         <Accordion.Body>
-                            {/* TODO */}
+                            <ConfiguratePanel formControl = {form_configurate}/>
                         </Accordion.Body>
                     </Accordion.Item>
                     <Accordion.Item eventKey = 'manager'>
