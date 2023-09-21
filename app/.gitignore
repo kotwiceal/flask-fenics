@@ -2,3 +2,4 @@
 node_modules
 poetry.lock
 src/static/package-lock.json
+src/static/dist

@@ -1,4 +1,5 @@
 import {ConfiguratePanel} from './configurate'
+import {Manager} from './manager'
 
 const TaskContainer = (prop) => {
 
@@ -16,6 +17,9 @@ const TaskContainer = (prop) => {
         formDisabled: formDisabledConfigurate, 
         setFormDisabled: setFormDisabledConfigurate
     }
+
+    // manager state contol
+    const [manager, setManager] = useState({free: [true, false, true, true]})
 
     return (
     <>
@@ -35,7 +39,7 @@ const TaskContainer = (prop) => {
                     <Accordion.Item eventKey = 'manager'>
                         <Accordion.Header>Manager</Accordion.Header>
                         <Accordion.Body>
-                            {/* TODO */}
+                            <Manager manager = {manager}/>
                         </Accordion.Body>
                     </Accordion.Item>
                     <Accordion.Item eventKey = 'monitor'>

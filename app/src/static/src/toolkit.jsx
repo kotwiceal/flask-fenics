@@ -147,4 +147,31 @@ const FormPattern = ({children, formControl}) => {
     )
 }
 
-export {NumberInputPattern, ArrayInputPattern, FormPattern}
+const PlaceholderPattern = ({children, state, type, xs}) => {
+
+    const renderSwitch = (type) => {
+        switch (type) {
+            case 'button':
+                return <Placeholder.Button xs = {xs}/>
+            case 'image':
+                return <PlaceholderImagePattern/>
+            default:
+                return <Placeholder xs = {xs}/>
+        }
+    }
+
+    return (
+    <>
+    {
+        state ?
+        <>{children}</>
+        :
+        <Placeholder animation = 'glow'>
+            {renderSwitch(type)}
+        </Placeholder>
+    }
+    </>
+    )
+}
+
+export {NumberInputPattern, ArrayInputPattern, FormPattern, PlaceholderPattern}
