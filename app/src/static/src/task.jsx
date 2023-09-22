@@ -21,6 +21,28 @@ const TaskContainer = (prop) => {
     // manager state contol
     const [manager, setManager] = useState({free: [true, false, true, true]})
 
+    // monitor state control
+    const [monitor, setMonitor] = useState(true)
+    const figureInitial = {plotter: 'matplotlib', extension: 'png', type: 'base64', image: '', state: false}
+    const [figure, setFigure] = useState(figureInitial)
+    const [formDisabledMonitor, setFormDisabledMonitor] = useState(false)
+    const [formDataMonitor, setFormDataMonitor] = useState({type: 'matplotlib', font_size: 16,
+        clim: [0, 1], cmap: 'viridis', bg_color: '#0f346b', font_color: '#3d66a4', fig_size: [400, 400]})
+    const form_monitor = {
+        formData: formDataMonitor,
+        setFormData: setFormDataMonitor, 
+        formDisabled: formDisabledMonitor, 
+        setFormDisabled: setFormDisabledMonitor
+    }
+
+    // progress state control
+    const [progress, setProgress] = useReducer(progressHandle, {state: false, bars: {
+        'initialize': {key: 'initialize', variant: 'primary', striped: true,
+            animated: true, now: 0, label: ''},
+        'process': {key: 'process', variant: 'primary', striped: true,
+            animated: true, now: 0, label: ''}
+    }})
+
     return (
     <>
     <div className = 'd-flex justify-content-center'>
@@ -45,7 +67,9 @@ const TaskContainer = (prop) => {
                     <Accordion.Item eventKey = 'monitor'>
                         <Accordion.Header>Monitor</Accordion.Header>
                         <Accordion.Body>
-                            {/* TODO */}
+                            <MonitorPanel figure = {figure} progress = {progress}
+                                formControl = {form_monitor}
+                            />
                         </Accordion.Body>
                     </Accordion.Item>
                 </Accordion>
