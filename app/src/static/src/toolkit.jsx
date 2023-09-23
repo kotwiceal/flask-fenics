@@ -1,5 +1,9 @@
+import Placeholder from 'react-bootstrap/Placeholder'
 import {useState} from 'react'
 import Form from 'react-bootstrap/Form'
+import Container from 'react-bootstrap/Container'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 
 /**
  * @brief Checking of value correction in field: array size and belonging value of each element to specified range.
@@ -147,6 +151,66 @@ const FormPattern = ({children, formControl}) => {
     )
 }
 
+const SelectPattern = (prop) => {
+    const [options, setOptions] = useState(prop.options)
+    const [feedback, setFeedback] = useState(prop.feedback)
+    const handleChange = (event) => {}
+
+    return (
+        <>
+            <Form.Group className = 'mb-2'>
+                <Form.FloatingLabel label= {prop.label}>
+                    <Form.Select type = {prop.type} name = {prop.name} defaultValue = {prop.value}
+                        onChange = {handleChange} required = {prop.required}>
+                        {
+                            options.map((option) => {
+                                return <option key = {option.value}
+                                    value = {option.value}>{option.text}</option>
+                            })
+                        }
+                    </Form.Select>
+                    <Form.Control.Feedback type = 'invalid'>{feedback}</Form.Control.Feedback>
+                </Form.FloatingLabel>
+            </Form.Group>
+        </>
+    )
+}
+
+const ColorPattern = (prop) => {
+    const [value, setValue] = useState(prop.value)
+    const id = useId()
+    const handlerChange = (event) => {
+        setValue(event.target.value)
+    }
+
+    return (
+    <>
+    <Form.Group className = 'mb-3'>
+        <Form.Label htmlFor = {id}>{prop.label}</Form.Label>
+        <Form.Control className = 'w-100' name = {prop.name} type = 'color' value = {value}
+            id = {id} title = {prop.label} 
+            onChange = {handlerChange}
+        />
+    </Form.Group>
+    </>
+    )
+}
+
+const PlaceholderImagePattern = () => {
+
+    return (
+        <>
+        <Container style = {{'backgroundColor': '#343a40'}}>
+            <Row className = 'justify-content-md-center'>
+                <Col md = 'auto'>
+                    <i className = 'bi bi-image' style = {{'fontSize': '200px'}}></i>    
+                </Col>
+            </Row>
+        </Container>
+        </>
+    )
+}
+
 const PlaceholderPattern = ({children, state, type, xs}) => {
 
     const renderSwitch = (type) => {
@@ -174,4 +238,4 @@ const PlaceholderPattern = ({children, state, type, xs}) => {
     )
 }
 
-export {NumberInputPattern, ArrayInputPattern, FormPattern, PlaceholderPattern}
+export {NumberInputPattern, ArrayInputPattern, FormPattern, SelectPattern, ColorPattern, PlaceholderPattern}

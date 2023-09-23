@@ -1,7 +1,11 @@
+import Card from 'react-bootstrap/Card'
+import Accordion from 'react-bootstrap/Accordion'
 import {ConfiguratePanel} from './configurate'
 import {Manager} from './manager'
+import {MonitorPanel, progressHandle} from './monitor'
+import {useState, useReducer, useEffect, useRef} from 'react'
 
-const TaskContainer = (prop) => {
+const TaskContainer = ({socket, header}) => {
 
     // accordion state control
     const [accordionActiveKey, setAccordionActiveKey] = useState('configurate')
@@ -10,6 +14,7 @@ const TaskContainer = (prop) => {
     }
 
     // form data state control
+    const isMountedConfigurate = useRef(false);
     const [formDisabledConfigurate, setFormDisabledConfigurate] = useState(false)
     const [formDataConfigurate, setFormDataConfigurate] = useState({})
     const form_configurate = {
@@ -22,6 +27,7 @@ const TaskContainer = (prop) => {
     const [manager, setManager] = useState({free: [true, false, true, true]})
 
     // monitor state control
+    const isMountedMonitor = useRef(false);
     const [monitor, setMonitor] = useState(true)
     const figureInitial = {plotter: 'matplotlib', extension: 'png', type: 'base64', image: '', state: false}
     const [figure, setFigure] = useState(figureInitial)
@@ -43,12 +49,79 @@ const TaskContainer = (prop) => {
             animated: true, now: 0, label: ''}
     }})
 
+    // start socket
+    socket.connect()
+
+    // define socket events
+    useEffect(() => {
+
+        socket.on('connect', () => {
+            setIsConnected(true)
+            console.log('socketio: connection event', socket.id)
+        })
+
+        socket.on('manager', (data) => {
+            setManager(data)
+            console.log('socketio: manager event', data)
+        })
+
+        socket.on('disconnect', () => {
+            setIsConnected(false)
+            console.log('socketio: disconnect event')
+        })
+
+        socket.on('process', (data) => {
+            console.log('process', data)
+            setProgress({type: 'processed'})
+            setFormDisabledConfigurate(false)
+        })
+
+        socket.on('monitor', (data) => {
+            console.log('monitor event', data)
+            data.state = true
+            setFigure(data)
+            setProgress({type: 'processing', value: data.progress})
+        })
+
+        return () => {
+            socket.disconnect()
+        }
+    }, [])
+
+    // start processing
+    useEffect(() => {
+        if (isMountedConfigurate.current) {
+            console.log(formDataConfigurate)
+            socket.emit('process', {id: 'test', problem: formDataConfigurate, styles: {bg_color: '#563d7c'}})
+
+            setMonitor(true)
+            setTimeout(() => {setAccordionActiveKey('monitor')}, 500)
+            let figureInitialTemp = figureInitial
+            figureInitialTemp.state = true
+            setFigure(figureInitialTemp)
+            setFormDisabledConfigurate(true)
+            setProgress({type: 'initialize'})
+        } else {
+            isMountedConfigurate.current = true
+        }
+    }, [formDataConfigurate])
+
+    // to change monitor appearance
+    useEffect(() => {
+        if (isMountedMonitor.current) {
+            console.log(formDataMonitor)
+            socket.emit('monitor_update', {id: 'test', styles: {formDataMonitor}})
+        } else {
+            isMountedMonitor.current = true
+        }
+    }, [formDataMonitor])
+
     return (
     <>
     <div className = 'd-flex justify-content-center'>
         <Card className = 'mt-3' style = {{width: '80%'}}>
             <Card.Header>
-                <Card.Title>{prop.header}</Card.Title>
+                <Card.Title>{header}</Card.Title>
             </Card.Header>
             <Card.Body>
                 <Accordion activeKey = {accordionActiveKey} alwaysOpen onSelect = {onSelectAccordion}>
